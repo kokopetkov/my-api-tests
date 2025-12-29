@@ -30,6 +30,10 @@ def temp_user(user_client):
     }
 
     response = user_client.create_user(user_payload)
+    if response.status_code != 201:
+        pytest.fail(
+            f"Fixture Setup Failed: Could not create user. Status: {response.status_code}")
+
     user_data = response.json()
     user_id = user_data["id"]
 

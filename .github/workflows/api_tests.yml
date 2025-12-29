@@ -31,6 +31,16 @@ jobs:
           USERS_DATA_PATH: data/users_data.json
         run: pytest
 
+      - name: Generate GitHub Summary
+        run: |
+          echo "### 🚀 Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Ran on: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          # This extracts the last line of pytest output (the summary line)
+          tail -n 1 test_output.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        if: always()
+
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
