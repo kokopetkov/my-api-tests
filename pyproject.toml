@@ -16,6 +16,7 @@ dependencies = [
     "pytest-dotenv>=0.5.2",
     "pytest-html>=4.1.1",
     "requests>=2.31.0",
+    "allure-pytest",
     "pydantic[email]>=2.6.0"
 ]
 
