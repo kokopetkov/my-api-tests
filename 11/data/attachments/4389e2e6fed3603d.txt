@@ -1,0 +1,2 @@
+INFO     api.user_client:user_client.py:16 Sending GET request to: https://jsonplaceholder.typicode.com/users/1
+INFO     api.user_client:user_client.py:20 Response received: Status 200
