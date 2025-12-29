@@ -1,11 +1,11 @@
+from typing import Optional
+from pydantic import ConfigDict
 from models.base_model import MyBaseModel
 
-# Това е за данните, които ЧЕТЕМ от нашия JSON
 class UserTestData(MyBaseModel):
     user_id: int
     expected_name: str
 
-# Това са вложените модели за ОТГОВОРА от API-то
 class Geo(MyBaseModel):
     lat: str
     lng: str
@@ -22,13 +22,16 @@ class Company(MyBaseModel):
     catchPhrase: str
     bs: str
 
-# Това е основният модел за ОТГОВОРА от API-то
-class UserResponseModel(MyBaseModel):
+class User(MyBaseModel):
+    # Ignore fields we haven't defined
+    model_config = ConfigDict(extra='ignore')
+
     id: int
     name: str
     username: str
     email: str
-    address: Address
-    phone: str
-    website: str
-    company: Company
+    # Use Optional or | None to tell Pydantic these are not mandatory
+    address: Optional[dict] = None
+    phone: Optional[str] = None
+    website: Optional[str] = None
+    company: Optional[dict] = None

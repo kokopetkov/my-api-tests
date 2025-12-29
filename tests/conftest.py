@@ -5,7 +5,6 @@ from api.user_client import UserClient
 @pytest.fixture(scope="session")
 def user_client():
     base_url = os.getenv("BASE_URL", "https://jsonplaceholder.typicode.com")
-    # Now pass the required base_url argument
     client = UserClient(base_url=base_url)
     return client
 
@@ -22,28 +21,15 @@ def sample_user_data():
 
 @pytest.fixture
 def temp_user(user_client):
-    # SETUP: Create a user before the test
     user_payload = {
         "name": "Cleanup Test",
         "username": "cleanup_user",
         "email": "cleanup@example.com"
     }
 
-    response = user_client.create_user(user_payload)
-    if response.status_code != 201:
-        pytest.fail(
-            f"Fixture Setup Failed: Could not create user. Status: {response.status_code}")
+    # This now returns a User object, not a Response!
+    user = user_client.create_user(user_payload)
 
-    user_data = response.json()
-    user_id = user_data["id"]
+    yield user  # The test runs here
 
-    yield user_data  # The test runs here
-
-    # TEARDOWN: Delete the user after the test is finished
-    delete_response = user_client.delete_user(user_id)
-
-    if delete_response.status_code == 200 or delete_response.status_code == 204:
-        print(f"\nSuccessfully cleaned up user with ID: {user_id}")
-    else:
-        print(
-            f"\nFailed to cleanup user {user_id}. Status: {delete_response.status_code}")
+    user_client.delete_user(user.id)
