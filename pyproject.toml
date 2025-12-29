@@ -1,10 +1,15 @@
+[build-system]
+# Modern standards for Python 3.14 (Late 2025)
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "api-tests"
-version = "1.0.0"
+name = "my_api_tests"
+version = "0.1.0"
 description = "API Automation Framework"
 readme = "README.md"
 requires-python = ">=3.11"
-# Project dependencies previously located in requirements.txt
+# List all required libraries here
 dependencies = [
     "pytest>=8.0.0",
     "pytest-xdist>=3.5.0",
@@ -15,26 +20,21 @@ dependencies = [
 ]
 
 [tool.setuptools]
-# Explicitly define packages for flat-layout discovery
-packages = ["api", "data", "models"]
+# Explicitly include your packages so pip knows what to install
+packages = ["api", "data", "models", "utils", "tests"]
 
 [tool.pytest.ini_options]
-# Pytest core configuration
+# Configuration for local and CI execution
 pythonpath = ["."]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 env_files = [".env"]
 
-# Console logging configuration
+# Console logging setup
 log_cli = true
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
-# Default execution arguments (parallel execution and HTML report)
-# with threads addopts = "-n auto --html=report.html --self-contained-html"
+# Standard report options (removed -n auto as requested)
 addopts = "--html=report.html --self-contained-html"
-
-[build-system]
-requires = ["setuptools>=70.0", "wheel"]
-build-backend = "setuptools.build-meta"
