@@ -1,7 +1,6 @@
 import requests
 import logging
 
-# English comments as requested
 class BaseClient:
     def __init__(self, base_url):
         self.base_url = base_url
@@ -10,18 +9,15 @@ class BaseClient:
         self.logger = logging.getLogger(__name__)
 
     def _request(self, method, endpoint, **kwargs):
-        # Ensure exactly one slash between base_url and endpoint
+        # Safely join base_url and endpoint
+        # Example: "http://api.com/" + "/users" -> "http://api.com/users"
         url = f"{self.base_url.rstrip('/')}/{endpoint.lstrip('/')}"
 
-        # English comment: Log the final URL to verify it's correct
-        print(f"\nDEBUG: {method} {url}")
-
+        self.logger.info(f"Sending {method} to {url}")
         response = self.session.request(method, url, **kwargs)
 
-        if not response.ok:
-            # English comment: Log body only on failure to keep logs clean
-            print(f"DEBUG: Response body: {response.text}")
-
+        # English comment: Log response status for Allure visibility
+        self.logger.info(f"Response Status: {response.status_code}")
         return response
 
     def get(self, endpoint, **kwargs):
