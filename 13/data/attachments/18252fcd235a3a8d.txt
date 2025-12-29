@@ -1,0 +1,2 @@
+INFO     api.base_client:base_client.py:16 Sending POST to https://jsonplaceholder.typicode.com/users
+INFO     api.base_client:base_client.py:20 Response Status: 201
