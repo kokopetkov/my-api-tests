@@ -29,7 +29,8 @@ jobs:
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           USERS_DATA_PATH: data/users_data.json
-        run: pytest
+        run: pytest | tee test_output.log
+        if: always()
 
       - name: Generate GitHub Summary
         run: |
