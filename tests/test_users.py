@@ -24,3 +24,22 @@ def test_user_data_contains_id(user_client):
     response = user_client.get_user(1)
     data = response.json()
     assert data["id"] == 1
+
+def test_get_user_by_id(user_client):
+    # Now user_client comes directly from conftest.py
+    response = user_client.get_user(1)
+    assert response.status_code == 200
+    assert response.json()["id"] == 1
+
+def test_create_user(user_client, sample_user_data):
+    # Using two fixtures at once
+    response = user_client.create_user(sample_user_data)
+    assert response.status_code == 201
+
+def test_delete_functionality(user_client, temp_user):
+    # We use the user created by the fixture
+    user_id = temp_user["id"]
+
+    # We can manually delete it or just let the fixture handle it
+    response = user_client.delete_user(user_id)
+    assert response.status_code in [200, 202, 204]

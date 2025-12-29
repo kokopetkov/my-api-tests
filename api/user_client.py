@@ -20,3 +20,14 @@ class UserClient:
         logger.info(f"Response received: Status {response.status_code}")
 
         return response
+
+    def create_user(self, payload):
+        url = f"{self.base_url}"
+        # This will show in console with 'pytest -s'
+        print(f"\nDEBUG: Sending POST to {url}")
+        return requests.post(url, json=payload)
+
+    def delete_user(self, user_id):
+        # Delete a user by their unique ID
+        url = f"{self.base_url.rstrip('/')}/{user_id}"
+        return requests.delete(url)
