@@ -5,7 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch: # Позволява ръчно пускане
+  workflow_dispatch:
 
 jobs:
   run-api-tests:
@@ -26,14 +26,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Execute Tests
-        # Подаваме BASE_URL директно тук, тъй като нямаме .env файл в GitHub
         env:
-          BASE_URL: https://jsonplaceholder.typicode.com
+          BASE_URL: ${{ secrets.BASE_URL }}
           USERS_DATA_PATH: data/users_data.json
         run: pytest
 
       - name: Upload Test Report
-        if: always() # Качва репорта дори ако тестовете се провалят
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: api-test-results
