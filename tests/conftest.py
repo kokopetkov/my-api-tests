@@ -4,10 +4,10 @@ from api.user_client import UserClient
 
 @pytest.fixture(scope="session")
 def user_client():
-    client = UserClient()
-    print("\n--- Starting API Session ---")
-    yield client
-    print("\n--- Closing API Session ---")
+    base_url = os.getenv("BASE_URL", "https://jsonplaceholder.typicode.com")
+    # Now pass the required base_url argument
+    client = UserClient(base_url=base_url)
+    return client
 
 @pytest.fixture
 def sample_user_data():

@@ -2,32 +2,26 @@ import logging
 import os
 import requests
 
+from api.base_client import BaseClient
+
 logger = logging.getLogger(__name__)
 
-class UserClient:
-    def __init__(self):
-        self.base_url = os.getenv("BASE_URL", "https://localhost") + "/users"
+class UserClient(BaseClient):
+    def __init__(self, base_url):
+        super().__init__(base_url)
+        self.endpoint = "/users"
 
-    def get_all_users(self):
-        return requests.get(self.base_url)
-
-    def get_user(self, user_id):
-        url = f"{self.base_url}/{user_id}"
-        logger.info(f"Sending GET request to: {url}")
-
-        response = requests.get(url)
-
-        logger.info(f"Response received: Status {response.status_code}")
-
-        return response
+    def get_users(self):
+        # Pass the endpoint to the parent get method
+        return self.get(self.endpoint)
 
     def create_user(self, payload):
-        url = f"{self.base_url}"
-        # This will show in console with 'pytest -s'
-        print(f"\nDEBUG: Sending POST to {url}")
-        return requests.post(url, json=payload)
+        # Pass the endpoint here! This was missing.
+        return self.post(self.endpoint, json=payload)
+
+    def get_user(self, user_id):
+        # Combine endpoint and ID
+        return self.get(f"{self.endpoint}/{user_id}")
 
     def delete_user(self, user_id):
-        # Delete a user by their unique ID
-        url = f"{self.base_url.rstrip('/')}/{user_id}"
-        return requests.delete(url)
+        return self.delete(f"{self.endpoint}/{user_id}")

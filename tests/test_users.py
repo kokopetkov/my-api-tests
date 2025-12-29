@@ -1,3 +1,4 @@
+from pydantic import ValidationError
 import pytest
 from utils.file_reader import read_json_resource
 from models.user_model import UserResponseModel, UserTestData
@@ -17,7 +18,7 @@ def test_user_names(user_client, user: UserTestData):
     print(f"Validated user: {api_data.username} with email {api_data.email}")
 
 def test_get_all_users_status_code(user_client):
-    response = user_client.get_all_users()
+    response = user_client.get_users()
     assert response.status_code == 200
 
 def test_user_data_contains_id(user_client):
@@ -43,3 +44,30 @@ def test_delete_functionality(user_client, temp_user):
     # We can manually delete it or just let the fixture handle it
     response = user_client.delete_user(user_id)
     assert response.status_code in [200, 202, 204]
+
+def test_user_model_invalid_data():
+    # Test if Pydantic raises error when 'id' is not an integer
+    bad_data = {
+        "id": "not-a-number",
+        "name": "Test User",
+        "email": "test@example.com"
+    }
+
+    with pytest.raises(ValidationError) as exc_info:
+        UserTestData(**bad_data)
+
+    # Check if the error points to the 'id' field
+    assert "id" in str(exc_info.value)
+
+def test_create_user_with_invalid_email(user_client):
+    # Payload with invalid email format
+    invalid_payload = {
+        "name": "Wrong Email",
+        "email": "this-is-not-an-email"
+    }
+
+    response = user_client.create_user(invalid_payload)
+
+    # We expect a 400 or 422 error, not 201 Created
+    assert response.status_code in [
+        400, 422], f"Expected error code, got {response.status_code}"

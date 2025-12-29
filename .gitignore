@@ -7,3 +7,5 @@ assets/
 build/
 *.egg-info/
 dist/
+collect_file.py
+project_summary.txt
